@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="stSimu" Id="{a350e530-aa18-030f-17b5-483173fd6266}">
+    <Declaration><![CDATA[TYPE stSimu :
+STRUCT
+	x0	:	INT;    // posizione iniziale pacco
+	x1	:	INT;	// posizione finale pacco
+	x	:	INT;	// posizione del pacco sul nastro
+	invis	:	BOOL;	// pacco invisibile
+	sET	:	STRING;	// tempo trascorso dall'ultimo pacco
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="stRawOutput" Id="{d54092bd-7ad0-0041-0dc8-150177ad10e6}">
+    <Declaration><![CDATA[TYPE stRawOutput :
+STRUCT
+	H1		:	BOOL;
+	HEmg	:	BOOL;
+	M		:	BOOL;
+	Libero	:	BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

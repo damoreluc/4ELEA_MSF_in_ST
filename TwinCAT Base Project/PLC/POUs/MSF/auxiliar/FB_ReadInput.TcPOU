@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_ReadInput" Id="{78c7b48a-8a10-0503-2425-624957aba7fa}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_ReadInput
+VAR_INPUT
+	rawInput	:	stRawInput;
+END_VAR
+VAR_IN_OUT
+	input	:	stInput;
+END_VAR
+VAR
+	tpStart	:	TP();
+	tpAck	:	TP();
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// temporizzatori a impulso per start e ack
+	tpStart(IN := rawInput.Start, PT := T#200MS);
+	tpAck(IN := rawInput.Ack, PT := T#200MS);
+
+// aggiornamento ingressi virtuali
+	input.start := tpStart.Q;
+	input.stop := rawInput.Stop;
+	input.ack := tpAck.Q;
+	input.emg := rawInput.Emg;
+	input.FC1 := rawInput.FC1;
+	input.FC2 := rawInput.FC2;]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="stInput" Id="{f1dd25d7-0ea3-02f8-348d-7450be40006b}">
+    <Declaration><![CDATA[TYPE stInput :
+STRUCT
+	start	:	BOOL;
+	stop	:	BOOL;
+	emg		:	BOOL;
+	ack		:	BOOL;
+	FC1		:	BOOL;
+	FC2		:	BOOL;	
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

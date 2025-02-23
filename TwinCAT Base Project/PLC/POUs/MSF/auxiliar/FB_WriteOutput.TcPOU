@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_WriteOutput" Id="{2cba98a2-63f7-0920-2b44-4fc0286aef75}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_WriteOutput
+VAR_INPUT
+	output	:	stOutput;
+END_VAR
+VAR_IN_OUT
+	rawOutput	:	stRawOutput;
+END_VAR
+VAR
+	lamp	:	BLINK;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(* 
+ * Converte le uscite virtuali in uscite fisiche del PLC
+ *)
+
+	lamp(enable:=TRUE, timelow := T#250MS, timehigh := T#250MS);
+
+	rawOutput.H1 := output.H1;
+	
+	IF(output.HEmglamp) THEN
+		rawOutput.HEmg := lamp.OUT;		// lampeggio
+//	ELSIF(output.HEmg) THEN
+//		rawOutput.HEmg := output.HEmg;	// accensione fissa
+//	ELSE
+//		rawOutput.HEmg := FALSE;
+//	END_IF
+    ELSE
+		rawOutput.HEmg := output.HEmg;
+	END_IF
+    
+	rawOutput.M := output.M;
+	
+	rawOutput.Libero := output.Libero;]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

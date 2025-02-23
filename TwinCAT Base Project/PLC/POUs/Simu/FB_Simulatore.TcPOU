@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_Simulatore" Id="{33e5252b-94fd-0046-014e-5df222a35239}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Simulatore
+VAR_INPUT
+	plantInput	:	stRawOutput;
+END_VAR
+VAR_IN_OUT
+	plantOutput	:	stRawInput;
+END_VAR
+VAR
+	simuVar	:	stSimu;	
+	tIdle	:	TON();
+	rFC1	:	R_TRIG();
+	fFC2	:	F_TRIG();
+	busy	:	RS();
+	
+	// flag inizializzazione
+	setup	:	BOOL	:= TRUE;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF(setup) THEN 
+	setup := FALSE;
+	// simulatore
+	simuVar.x0 := 130;
+	simuVar.x1 := 470;
+	simuVar.invis := TRUE;	
+END_IF
+
+rFC1(CLK := plantOutput.FC1);
+fFC2(CLK := plantOutput.FC2);
+
+
+
+// carica nuovo pacco
+IF(rFC1.Q AND NOT busy.Q1) THEN
+	simuVar.invis := FALSE;
+	simuVar.x := simuVar.x0;
+END_IF
+
+
+
+// scarica pacco
+IF(fFC2.Q) THEN
+	simuVar.invis := TRUE;
+	simuVar.x := simuVar.x0;
+END_IF
+
+busy(SET := rFC1.Q, RESET1 := fFC2.Q);
+
+// timer attesa nuovo pacco
+tIdle(IN := (plantInput.M AND plantInput.Libero), PT := T#20S);
+simuVar.sET := TIME_TO_STRING(tIdle.ET);
+//GVL_SIM.sET := TIME_TO_STRING(tIdle.ET);
+
+// movimentazione del pacco
+IF plantInput.M THEN
+	// un pacco è caricato sul nastro
+	IF(simuVar.invis = FALSE) THEN 	
+	  IF (simuVar.x > simuVar.x0 + 10) THEN
+		plantOutput.FC1 := FALSE;
+	  END_IF
+	  
+	  IF (simuVar.x < simuVar.x1) THEN
+		// sposta il pacchetto sul nastro
+		simuVar.x := simuVar.x + 1;
+		plantOutput.FC2 := FALSE;
+	  ELSE
+		plantOutput.FC2 := TRUE;
+	  END_IF
+	END_IF
+END_IF
+
+]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

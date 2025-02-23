@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="stRawInput" Id="{2b5d9fb3-ffb1-0ce5-293f-82fcda668572}">
+    <Declaration><![CDATA[TYPE stRawInput :
+STRUCT
+	Start	:	BOOL;
+	Stop	:	BOOL;
+	Emg		:	BOOL;
+	Ack		:	BOOL;
+	FC1		:	BOOL;
+	FC2		:	BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="stOutput" Id="{4fb855c8-dcde-0344-3ad9-28fa75977756}">
+    <Declaration><![CDATA[TYPE stOutput :
+STRUCT
+	H1		:	BOOL;
+	HEmglamp	:	BOOL;
+	HEmg	:	BOOL;
+	M		:	BOOL;
+	Libero	:	BOOL;
+	Idle	:	TIME;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

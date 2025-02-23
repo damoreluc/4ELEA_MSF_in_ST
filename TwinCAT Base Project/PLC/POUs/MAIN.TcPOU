@@ -3,22 +3,45 @@
   <POU Name="MAIN" Id="{d6a97a93-bbbb-4808-8334-637627ec2e0f}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MAIN
 VAR
-	nastro	: fb_msf();
+	// flag inizializzazione
+	setup	:	BOOL	:= TRUE;
+	
+	// variabili di processo
+	input	:	stInput;
+    output	:	stOutput;
+	
+	readInput	:	FB_ReadInput();
+	nastro		:	fb_msf();
+	writeOutput	:	FB_WriteOutput();
+	
+	// simulatore
+	plant	:	FB_Simulatore();
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[nastro(
-	start:= GVL_IO.start, 
-	stop:= GVL_IO.stop, 
-	emg:= GVL_IO.emg, 
-	ack:= GVL_IO.ack, 
-	fc1:= GVL_IO.fc1, 
-	fc2:= GVL_IO.fc2, 
-	H1=> GVL_IO.H1, 
-	HEMG=> GVL_IO.HEMG, 
-	M=> GVL_IO.M,
-	libero=>GVL_IO.libero);
-]]></ST>
+      <ST><![CDATA[IF(setup) THEN
+	setup := FALSE;
+	GVL_IO.rawInputs.Emg := TRUE;
+	GVL_IO.rawInputs.Stop := TRUE;
+	GVL_IO.rawInputs.FC1 := FALSE;
+	GVL_IO.rawInputs.FC2 := FALSE;
+	
+ELSE
+// lettura ingressi fisici
+	readInput(rawInput := GVL_IO.rawInputs, input := input);
+	
+// esecuzione MSF
+    nastro(input := input, output := output);
+	
+// aggiornamento uscite fisiche
+	writeOutput(output := output, rawoutput := GVL_IO.rawOutputs);
+	
+// ----------------------------
+// esecuzione simulatore
+	plant(plantInput := GVL_IO.rawOutputs, plantOutput := GVL_IO.rawInputs);	
+
+// ----------------------------
+END_IF]]></ST>
     </Implementation>
   </POU>
 </TcPlcObject>
